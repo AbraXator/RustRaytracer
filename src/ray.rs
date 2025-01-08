@@ -2,8 +2,8 @@ use std::ops::Mul;
 use crate::vec3::Vec3;
 
 pub struct Sphere {
-    center: Vec3,
-    radius: f64
+    pub center: Vec3,
+    pub radius: f64
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -22,27 +22,27 @@ impl Ray {
         }
     }
 
-    pub fn set_color(mut self, color: Vec3) {
+    pub fn set_color(&mut self, color: Vec3) {
         self.color = color;
     }
 
-    pub fn at(t: f64, ray: &Ray) -> Vec3 {
+    pub fn at(self, t: f64) -> Vec3 {
         let dir = Vec3::new(
-            ray.direction.x() * t,
-            ray.direction.y() * t,
-            ray.direction.z() * t
+            self.direction.x() * t,
+            self.direction.y() * t,
+            self.direction.z() * t
         );
 
-        ray.origin + dir
+        self.origin + dir
     }
 
-    pub fn hit_sphere(sphere: &Sphere, ray: Ray ) -> bool {
-        let point = sphere.center - ray.origin;
-        let a = ray.direction.dot(ray.direction);
-        let b = -2f64 * ray.direction.dot(point);
+    pub fn hit_sphere(&self, sphere: &Sphere ) -> bool {
+        let point = sphere.center - self.origin;
+        let a = self.direction.dot(self.direction);
+        let b = -2.0 * self.direction.dot(point);
         let c = point.dot(point) - sphere.radius * sphere.radius;
-        let discriminant = b * b - 4f64 * a * c;
+        let discriminant = b * b - 4.0 * a * c;
 
-        discriminant >= 0f64
+        discriminant >= 0.0
     }
 }

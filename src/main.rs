@@ -5,6 +5,7 @@ use crate::vec3::Vec3;
 mod vec3;
 mod color;
 mod ray;
+mod mth;
 
 fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
@@ -31,10 +32,11 @@ fn main() {
 
     for j in 0..image_height {
         for i in 0..image_width {
-            let pixel_center = pixel00 + (pixel_delta_u * i as f64) + (pixel_delta_v * j as f64);
+            let pixel_center = pixel00 + (pixel_delta_u * j as f64) + (pixel_delta_v * i as f64);
             let ray_direction = pixel_center - camera_center;
-            let ray = Ray::new(camera_center, ray_direction);
-            ray.set_color(color_for_ray(ray));
+            let mut ray = Ray::new(camera_center, ray_direction);
+            let ray_color = color_for_ray(ray);
+            ray.set_color(ray_color);
 
             color::write_color(&ray.color);
         }

@@ -5,10 +5,20 @@ use crate::vec3::Vec3;
 type Color = Vec3;
 
 pub fn color_for_ray(ray: Ray) -> Vec3 {
+    let sphere = Sphere {
+        center: Vec3::new(0.0, 0.0, -1.0),
+        radius: 0.5
+    };
+    let hit_sphere = ray.hit_sphere(&sphere);
+    println!("{}", hit_sphere);
+    if hit_sphere {
+        return Color::new(1.0, 0.0, 0.0)
+    }
+
     let unit_direction = ray.direction.unit_vector();
     let a = 0.5 * (unit_direction.y() + 1.0);
 
-    Color::new(1.0, 1.0, 1.0) * (1.0 - a) + Color::new(0.5, 0.7, 1.0) * a
+    Color::new(a, a, a)
 }
 
 pub fn write_color(pixel_color: &Color) {

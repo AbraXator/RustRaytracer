@@ -36,11 +36,11 @@ impl Vec3 {
     }
 
     pub fn len(&self) -> f64 {
-        self.len_squared().sqrt()
+        (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
 
     pub fn len_squared(&self) -> f64 {
-        self.x*self.x + self.y*self.y + self.z * self.z
+        self.len() * self.len()
     }
 
     pub fn dot(self, other: Vec3) -> f64 {
