@@ -43,7 +43,7 @@ impl Vec3 {
         self.len() * self.len()
     }
 
-    pub fn dot(self, other: Vec3) -> f64 {
+    pub fn dot(&self, other: &Vec3) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
@@ -54,10 +54,20 @@ impl Vec3 {
             self.z / self.len()
         )
     }
+
+    pub fn distance(&self, other: &Vec3) -> f64 {
+        let dx = self.x - other.x();
+        let dy = self.y - other.y();
+        let dz = self.z - other.z();
+        (dx * dx + dy * dy + dz * dz).sqrt()
+    }
+
+    pub fn zero() -> Vec3 {
+        Vec3::new(0.0, 0.0, 0.0)
+    }
 }
 
 type Point3 = Vec3;
-
 
 impl Add for Vec3 {
     type Output = Vec3;
@@ -66,7 +76,7 @@ impl Add for Vec3 {
         Vec3 {
             x: self.x() + other.x(),
             z: self.z() + other.z(),
-            y: self.y() + other.z()
+            y: self.y() + other.y()
         }
     }
 }
@@ -78,7 +88,7 @@ impl Sub for Vec3 {
         Vec3 {
             x: self.x() - other.x(),
             z: self.z() - other.z(),
-            y: self.y() - other.z()
+            y: self.y() - other.y()
         }
     }
 }
@@ -114,7 +124,7 @@ impl Div for Vec3 {
         Vec3 {
             x: self.x() / other.x(),
             z: self.z() / other.z(),
-            y: self.y() / other.z()
+            y: self.y() / other.y()
         }
     }
 }
@@ -126,7 +136,7 @@ impl Mul for Vec3 {
         Vec3 {
             x: self.x() * other.x(),
             z: self.z() * other.z(),
-            y: self.y() * other.z()
+            y: self.y() * other.y()
         }
     }
 }
