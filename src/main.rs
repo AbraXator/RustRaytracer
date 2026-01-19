@@ -1,15 +1,9 @@
 use std::rc::Rc;
-use crate::hittable::{HittableList, Sphere};
-use crate::ray::Ray;
-use crate::vec3::Vec3;
-use crate::camera::*;
 
-mod vec3;
-mod ray;
-mod hittable;
-mod constants;
+mod core;
+mod object;
 mod interval;
-mod camera;
+mod renderer;
 
 fn main() {
     let mut world = HittableList::new();

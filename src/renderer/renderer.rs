@@ -1,12 +1,13 @@
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
+use std::ptr::write;
 use crate::constants::INFINITY;
 use crate::hittable::{Hit, HitRecord};
 use crate::interval::Interval;
 use crate::ray::Ray;
-use crate::vec3::Vec3;
+use crate::core::{Vec3, ZERO};
 
 const ASPECT_RATIO: f64 = 16.0 / 9.0;
-const IMAGE_WIDTH: i32 = 480;
+const IMAGE_WIDTH: i32 = 960;
 const FOCAL_LENGTH: f64 = 1.0;
 const SAMPLES_PER_PIXEL: i32 = 100;
 
@@ -19,24 +20,15 @@ pub struct Camera {
     pixel_delta_v: Vec3,
 }
 
-impl Add<Vec3> for f64 {
-    type Output = Vec3;
-
-
-    fn add(self, rhs: Vec3) -> Self::Output {
-        self + rhs
-    }
-}
-
 impl Camera {
     pub fn new () -> Camera {
         Self {
             image_height: 0,
             pixel_sample_scale: 0.0,
-            center: Vec3::zero(),
-            pixel00_loc: Vec3::zero(),
-            pixel_delta_u: Vec3::zero(),
-            pixel_delta_v: Vec3::zero(),
+            center: ZERO,
+            pixel00_loc: ZERO,
+            pixel_delta_u: ZERO,
+            pixel_delta_v: ZERO,
         }
     }
 
@@ -47,17 +39,19 @@ impl Camera {
 
         for j in 0..camera.image_height {
             for i in 0..IMAGE_WIDTH {
-                let color = Vec3::zero();
-                for i in 0..SAMPLES_PER_PIXEL {
+                let mut color = Vec3::zero();
+                for sample in 0..SAMPLES_PER_PIXEL {
                     let mut ray = Self::get_ray(&camera, i, j);
-                    ray.set_color(ray.color + ray_color(&ray, world));
+                    color = color + ray_color(&ray, world);
                 }
+                write_color(&color)
+                /*ray.set_color(newColor);
                 let pixel_center = camera.pixel00_loc + (camera.pixel_delta_u * i as f64) + (camera.pixel_delta_v * j as f64);
                 let ray_direction = pixel_center - camera.center;
                 let mut ray = Ray::new(camera.center, ray_direction);
                 ray.set_color(ray_color(&ray, world));
 
-                write_color(&ray.color);
+                write_color(&ray.color);*/
             }
         }
     }
@@ -94,7 +88,7 @@ impl Camera {
     }
 
     pub fn sample_square() -> Vec3 {
-        return Vec3::new(rand::random::<f64>() - 0.5, rand::random::<f64>() - 0.5, 0.0);
+        return Vec3::new(rand::random::<f32>() - 0.5, rand::random::<f32>() - 0.5, 0.0);
     }
 }
 
@@ -112,14 +106,17 @@ fn ray_color(ray: &Ray, world: &dyn Hit) -> Vec3 {
 }
 
 pub fn write_color(pixel_color: &Vec3) {
-    let r = pixel_color.x();
-    let g = pixel_color.y();
-    let b = pixel_color.z();
+    let scale = 1.0 / SAMPLES_PER_PIXEL as f32;
+    let r = (pixel_color.x * scale).sqrt();
+    let g = (pixel_color.y * scale).sqrt();
+    let b = (pixel_color.z * scale).sqrt();
 
-    let intensity = Interval::new(0.0, 0.9999999);
-    let rbyte = (255.999 * intensity.clamp(r)) as i32;
-    let gbyte = (255.999 * intensity.clamp(g)) as i32;
-    let bbyte = (255.999 * intensity.clamp(b)) as i32;
+
+    let intensity = Interval::new(0.0, 0.999);
+    let clampr = intensity.clamp(r);
+    let rbyte = (256f64 * clampr) as i32;
+    let gbyte = (256f64 * intensity.clamp(g)) as i32;
+    let bbyte = (256f64 * intensity.clamp(b)) as i32;
 
     println!("{} {} {}", rbyte, gbyte, bbyte);
 }

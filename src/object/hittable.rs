@@ -2,8 +2,8 @@ use std::io::stdout;
 use std::ptr::null;
 use std::rc::Rc;
 use crate::interval::Interval;
-use crate::ray::Ray;
-use crate::vec3::Vec3;
+use crate::core::ray::Ray;
+use crate::core::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct HitRecord {
@@ -20,7 +20,7 @@ impl HitRecord {
 
     //outward_normal is supposed to be a normal vector
     pub fn set_face_normal(&mut self, ray: &Ray, outward_normal: &Vec3) {
-        self.front_face = ray.direction.dot(outward_normal) < 0f64;
+        self.front_face = ray.direction.dot(outward_normal) < 0f32;
         self.normal = if self.front_face { *outward_normal } else { -*outward_normal };
     }
 }
