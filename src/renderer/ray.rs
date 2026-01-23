@@ -1,4 +1,4 @@
-use crate::core::Vec3;
+use crate::{core::Vec3, object::hittable::Hit};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Ray {
@@ -16,5 +16,21 @@ impl Ray {
 
     pub fn at(self, t: f64) -> Vec3 {
         self.origin + self.direction * t
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct HitRecord {
+    pub point: Vec3,
+    pub normal: Vec3,
+    pub t: f64,
+    pub front_face: bool
+}
+
+impl HitRecord {
+    pub fn new() -> HitRecord {
+        HitRecord {
+            ray: 
+        }
     }
 }

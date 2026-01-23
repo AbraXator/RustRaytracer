@@ -2,16 +2,8 @@ use std::io::stdout;
 use std::ptr::null;
 use std::rc::Rc;
 use crate::interval::Interval;
-use crate::core::ray::Ray;
 use crate::core::Vec3;
-
-#[derive(Clone, Copy)]
-pub struct HitRecord {
-    pub point: Vec3,
-    pub normal: Vec3,
-    pub t: f64,
-    pub front_face: bool
-}
+use crate::renderer::ray::HitRecord;
 
 impl HitRecord {
     pub fn new(point: Vec3, normal: Vec3, t: f64, front_face: bool) -> HitRecord {
